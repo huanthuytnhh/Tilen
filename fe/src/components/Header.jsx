@@ -7,12 +7,14 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RoomModal from "./RoomModal";
+import PaymentModal from "./PaymentModal";
 import { Button } from "./ui/button";
 import userApi from "@/apis/userApi";
 
 function Header() {
   const { user, isSignedIn } = useUser();
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isPaymentOpen, setPaymentOpen] = useState(false);
   const [hasSavedUser, setHasSavedUser] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
@@ -135,8 +137,14 @@ function Header() {
         )}
       </ul>
       {isSignedIn ? (
-        <div className="flex items-center pr-5">
+        <div className="flex items-center pr-5 space-x-2">
           <UserButton />
+          <Button
+            className="ml-2 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+            onClick={() => setPaymentOpen(true)}
+          >
+            Nạp Tiền
+          </Button>
           <Button className="ml-2" onClick={() => setModalOpen(true)}>
             Play
           </Button>
@@ -158,6 +166,10 @@ function Header() {
         onClose={() => setModalOpen(false)}
         onCreateRoom={handleCreateRoom}
         onJoinRoom={handleJoinRoom}
+      />
+      <PaymentModal
+        isOpen={isPaymentOpen}
+        onClose={() => setPaymentOpen(false)}
       />
     </div>
   );
