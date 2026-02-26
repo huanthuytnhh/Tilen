@@ -17,9 +17,17 @@ const { socketHandler } = require("./src/api/sockets/socketHandler");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Define multiple allowed origins for flexibility (Vite dev server + Docker Nginx)
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost",
+  "http://localhost:80"
+].filter(Boolean);
+
 // Configure CORS
 const corsOptions = {
-  origin: process.env.CLIENT_URL || "http://localhost:5173", // Frontend URL
+  origin: allowedOrigins,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allowed HTTP methods
   credentials: true, // Allow cookies
   optionsSuccessStatus: 204, // Success response code
@@ -33,7 +41,7 @@ app.use(bodyParser.json());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:5173", // Frontend URL
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true,
   },
