@@ -17,23 +17,11 @@ const { socketHandler } = require("./src/api/sockets/socketHandler");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Define multiple allowed origins for flexibility (Vite dev server + Docker Nginx)
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  "http://localhost:5173",
-  "http://localhost",
-  "http://localhost:80"
-].filter(Boolean);
-
-// Dynamic origin function to reflect the exact origin if allowed
+// Dynamic origin function to reflect the exact origin
+// Allow all origins gracefully to simplify EC2 deployment
 const corsOriginFn = function (origin, callback) {
-  // Allow requests with no origin (like mobile apps or curl requests)
-  // or requests where the origin matches our allowed list
-  if (!origin || allowedOrigins.includes(origin)) {
-    callback(null, true);
-  } else {
-    callback(new Error("Not allowed by CORS"));
-  }
+  // Always permit the request and echo back its exact origin
+  callback(null, true);
 };
 
 // Configure Express CORS
