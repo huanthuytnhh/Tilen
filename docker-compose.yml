@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: tilen-db
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      # In production, you would set a secure MySQL root password here and connect using it
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+
+  backend:
+    build:
+      context: ./be
+    container_name: tilen-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./be/.env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./fe
+      args:
+        # Vite requires environment variables at build time, so we must pass them in
+        # These pull from the host's environment or a local .env file when building
+        - VITE_SERVER_URL=${VITE_SERVER_URL:-http://localhost:3001}
+        - VITE_CLERK_PUBLISHABLE_KEY=${VITE_CLERK_PUBLISHABLE_KEY}
+        - VITE_AGORA_APP_ID=${VITE_AGORA_APP_ID}
+    container_name: tilen-frontend
+    restart: unless-stopped
+    ports:
+      # Map HTTP port 80 so it's accessible directly via the EC2 IP
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:

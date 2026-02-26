@@ -1,0 +1,34 @@
+/* Override the react-chat-widget styling */
+.rcw-new-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rcw-launcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rcw-sender {
+  margin: 0; /* Remove extra margin */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.rcw-picker-btn {
+  display: none;
+}
+.rcw-new-message .rcw-input {
+  padding: 12px 10px; /* Adjust padding for better centering */
+  margin-right: 10px; /* Optional: adjust right margin */
+}
+
+.rcw-send {
+  margin: 0; /* Ensure there's no margin pushing it away */
+}
+
+.rcw-widget-container {
+  bottom: 10px; /* Align the container at the bottom */
+  right: 10px;
+}

@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "./index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/",
+      "methods": ["GET,HEAD,PUT,PATCH,POST,DELETE"]
+    }
+  ],
+  "env": {
+    "DB_HOST": "bwgi9153jtq6ilnbz1ys-mysql.services.clever-cloud.com",
+    "DB_USER": "us5gflyh1tvhdzlq",
+    "DB_PASSWORD": "KkuBxqHa36LUYI0DJFD8",
+    "DB_NAME": "bwgi9153jtq6ilnbz1ys",
+    "DB_PORT": "3306",
+    "PORT": "3001",
+    "CLIENT_URL": "https://cardgame-client-v2.vercel.app/"
+  }
+}
