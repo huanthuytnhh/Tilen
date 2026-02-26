@@ -8,6 +8,7 @@ services:
     environment:
       # In production, you would set a secure MySQL root password here and connect using it
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: your_db_name
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
