@@ -2,19 +2,12 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 FROM node:20-alpine AS build
 WORKDIR /app
 
-# Vite needs environment variables baked into the static bundle during the build phase
-ARG VITE_SERVER_URL
-ARG VITE_CLERK_PUBLISHABLE_KEY
-ARG VITE_AGORA_APP_ID
-
-ENV VITE_SERVER_URL=$VITE_SERVER_URL
-ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
-ENV VITE_AGORA_APP_ID=$VITE_AGORA_APP_ID
+# Vite automatically reads environment variables from the .env file copied in the next step
 
 COPY package*.json ./
 COPY --from=deps /app/node_modules ./node_modules
