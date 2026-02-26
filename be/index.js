@@ -25,12 +25,23 @@ const allowedOrigins = [
   "http://localhost:80"
 ].filter(Boolean);
 
-// Configure CORS
+// Dynamic origin function to reflect the exact origin if allowed
+const corsOriginFn = function (origin, callback) {
+  // Allow requests with no origin (like mobile apps or curl requests)
+  // or requests where the origin matches our allowed list
+  if (!origin || allowedOrigins.includes(origin)) {
+    callback(null, true);
+  } else {
+    callback(new Error("Not allowed by CORS"));
+  }
+};
+
+// Configure Express CORS
 const corsOptions = {
-  origin: allowedOrigins,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allowed HTTP methods
-  credentials: true, // Allow cookies
-  optionsSuccessStatus: 204, // Success response code
+  origin: corsOriginFn,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  optionsSuccessStatus: 204,
 };
 app.use(cors(corsOptions));
 
@@ -41,7 +52,7 @@ app.use(bodyParser.json());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: corsOriginFn,
     methods: ["GET", "POST"],
     credentials: true,
   },
